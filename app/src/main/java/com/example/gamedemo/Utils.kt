@@ -1,7 +1,5 @@
 package com.example.gamedemo
 
-import kotlinx.android.synthetic.main.activity_main.*
-
 class Utils {
 
     private fun createListWithSteps(step: Int, numberOfColums: Int, currentEnemyPosition: Int?, endEnemyPosition: Int?, direction: String) : MutableList<Int> {

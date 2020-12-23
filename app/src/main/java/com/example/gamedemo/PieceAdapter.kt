@@ -3,16 +3,15 @@ package com.example.gamedemo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.board_cell.view.*
 
 class PieceAdapter(context: Context, pieceList: ArrayList<Piece>, private var adapterCallback: AdapterCallback) : BaseAdapter() {
+
     var piecesList = pieceList
     var context: Context? = context
     var environmentCell = ""
@@ -45,7 +44,6 @@ class PieceAdapter(context: Context, pieceList: ArrayList<Piece>, private var ad
 //        }
 
         pieceView.board_cell.setOnClickListener {
-//            Log.i("DemoLog", "Possition: " + position)
             environmentCell = adapterCallback.doThings(position)
             when (environmentCell) {
                 "Figure" -> pieceView.board_cell.background = ContextCompat.getDrawable(context!!, R.drawable.border_blue)

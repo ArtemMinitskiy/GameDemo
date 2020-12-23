@@ -7,4 +7,5 @@
     <color name="purple">#AEBF9EFF</color>
     <color name="red">#FF0000</color>
     <color name="green">#62FF55</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

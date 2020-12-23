@@ -2,8 +2,6 @@ package com.example.gamedemo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -15,11 +13,13 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
     var adapter: PieceAdapter? = null
     var pieceList = ArrayList<Piece>()
 
+    lateinit var enemyFigure: EnemyFigure
     lateinit var pMoves: MutableList<Int>
-    var enemysCurPossitions: MutableList<Int> = mutableListOf(20)
-    var enemysCurPossitions2: MutableList<Int> = mutableListOf(0)
+
     var checkStep: Boolean = false
-    var stepIndex: Int = -1
+    var isFigureDead: Boolean = false
+    var isFigureDeadIndex: Int = 0
+
     var oldPosition: Int? = -1
     var newPiece: Piece = Piece()
     var oldPiece: Piece = Piece()
@@ -32,59 +32,69 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         board_grid.numColumns = NUMBER_OF_COLUMS
 
         // load cards
-        pieceList.add(EnemyFigure("Coffee", R.drawable.enemy, null, false))
-        pieceList.add(Grass("Rock1", R.drawable.border_yellow, null, null))
-        pieceList.add(Grass("Coffee", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee4", null, null, null))
-        pieceList.add(Grass("Coffee6", null, null, null))
-        pieceList.add(Grass("Coffee", null, null, null))
-        pieceList.add(Grass("Rock1", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee4", null, null, null))
-        pieceList.add(Grass("Coffee5", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee6", null, null, null))
-        pieceList.add(Grass("Rock2", null, null, null))
-        pieceList.add(Grass("Rock2", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Rock1", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee4", null, null, null))
-        pieceList.add(Grass("Coffee5", null, null, null))
-        pieceList.add(EnemyFigure("Coffee", R.drawable.enemy, null, false))
-        pieceList.add(Grass("Coffee", null, null, null))
-        pieceList.add(Grass("Rock1", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee4", null, null, null))
-        pieceList.add(Grass("Coffee5", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("Coffee6", null, null, null))
-        pieceList.add(Grass("Rock2", null, null, null))
-        pieceList.add(Figure("Figure", R.drawable.chess_horse, null, null))
-        pieceList.add(Grass("null", null, null, null))
-        pieceList.add(Grass("null", null, null, null))
+        pieceList.add(EnemyFigure("EnemyFigure", R.drawable.enemy, null, false, 5, -1, 0, 0, 15))
+        pieceList.add(Grass("WinCell", R.drawable.border_yellow, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee4", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee6", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee4", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee5", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee6", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee4", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee5", null, null, null, null, null, null, null, null))
+        pieceList.add(EnemyFigure("EnemyFigure2", R.drawable.enemy, null, false, 1, -1, 20, 20, 23))
+        pieceList.add(Grass("Coffee", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee4", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee5", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee6", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Rock2", null, null, null, null, null, null, null, null))
+        pieceList.add(Figure("Figure", R.drawable.chess_horse, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
 
         adapter = PieceAdapter(this, pieceList, this)
         board_grid.adapter = adapter
 
         resetFab.setOnClickListener {
             if (checkStep == true) {
+                var checkName = "Figure"
+                for (index in 0..(NUMBER_OF_COLUMS * NUMBER_OF_ROWS) - 1) {
+//                    Handler(Looper.getMainLooper()).postDelayed({
+                    if (pieceList.get(index) is EnemyFigure) {
 
-                stepIndex++
-                if (!isDead(pieceList, enemysCurPossitions)) {
-                    universalEnemyMoves(pieceList, 1, 21, 24, enemysCurPossitions)
+                        enemyFigure = pieceList.get(index) as EnemyFigure
+
+                        if (!enemyFigure.name.equals(checkName)) {
+                            isFigureDead = isDead(pieceList, index)
+                            isFigureDeadIndex = index
+
+                            if (!isDead(pieceList, index)) {
+                                universalEnemyMoves(pieceList, enemyFigure)
+                            }
+//
+                            checkName = enemyFigure.name.toString()
+                        }
+
+                    }
+//                    },800)
+                }
+                if (isFigureDead){
+                    deathAttackMove(pieceList, isFigureDeadIndex)
                 }
 
-                if (!isDead(pieceList, enemysCurPossitions2)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        universalEnemyMoves(pieceList, 5, 1, 16, enemysCurPossitions2)
-                    }, 500)
-                }
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    if (stepIndex == (2 * (NUMBER_OF_COLUMS - 1)) - 1) stepIndex = -1
-                }, 1000)
                 checkFigureDoubleClick = false
             }
         }
@@ -102,16 +112,12 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         }
     }
 
-    fun isDead(pieceList: ArrayList<Piece>, currentEPs: MutableList<Int>): Boolean {
+    fun isDead(pieceList: ArrayList<Piece>, currentEPs: Int): Boolean {
         // Death check
-        val attackRadius: MutableList<Int> = Figure().possibleMoves(currentEPs.get(0) + 1, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+        val attackRadius: MutableList<Int> = Figure().possibleMoves(currentEPs, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+        attackRadius.sort()
         for (index in 0..attackRadius.size - 1) {
-            if (pieceList.get(attackRadius.get(index) - 1) is Figure) {
-                pieceList.set(currentEPs.get(0), Grass("Coffee", null, null, null))
-                pieceList.set(
-                    attackRadius.get(index) - 1,
-                    EnemyFigure("Coffee", R.drawable.enemy, null, false)
-                )
+            if (pieceList.get(attackRadius.get(index)) is Figure) {
                 Toast.makeText(this, "You are DEAD!", Toast.LENGTH_LONG).show()
                 checkStep = false
                 return true
@@ -121,10 +127,33 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         return false
     }
 
+    fun deathAttackMove(pieceList: ArrayList<Piece>, currentEPs: Int) {
+        // Death attack
+        val attackRadius: MutableList<Int> = Figure().possibleMoves(currentEPs, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+        attackRadius.sort()
+        for (index in 0..attackRadius.size - 1) {
+            if (pieceList.get(attackRadius.get(index)) is Figure) {
+                pieceList.set(currentEPs, Grass("Coffee", null, null, null, null, null, null, null, null))
+                pieceList.set(attackRadius.get(index), EnemyFigure("Coffee", R.drawable.enemy, null, false, null, null, null, null, null))
+                Toast.makeText(this, "You are DEAD!", Toast.LENGTH_LONG).show()
+                checkStep = false
+            }
+        }
+        attackRadius.clear()
+        adapter = PieceAdapter(this, pieceList, this)
+        board_grid.adapter = adapter
+    }
+
     fun isWin(pieceList: ArrayList<Piece>, currentEPs: Int, winPossition: Int): Boolean {
         if (pieceList.get(winPossition) is Figure) {
-            pieceList.set(winPossition, Figure("Figure", R.drawable.chess_horse, null, null))
-            pieceList.set(currentEPs, Grass("Coffee", null, null, null))
+            pieceList.set(
+                winPossition,
+                Figure("Figure", R.drawable.chess_horse, null, null, null, null, null, null, null)
+            )
+            pieceList.set(
+                currentEPs,
+                Grass("Coffee", null, null, null, null, null, null, null, null)
+            )
             Toast.makeText(this, "You are WIN!", Toast.LENGTH_LONG).show()
             return true
         }
@@ -132,7 +161,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         return false
     }
 
-    fun steps(step: Int, axisX: Int, currentEP: Int?, endEP: Int?, direction: String): Int {
+    fun steps(step: Int, axisX: Int, currentEP: Int?, endEP: Int?, direction: String, stepIndex: Int): Int {
         var stepI = step
         val checkEnemyPossition: Int
         if (endEP!! - currentEP!! > axisX) {
@@ -195,35 +224,44 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
 
     }
 
-    fun universalEnemyMoves(
-        pieceList: ArrayList<Piece>,
-        step: Int,
-        enemyStartPossition: Int,
-        enemyEndPosition: Int?,
-        mutableCurEnemysPossition: MutableList<Int>
-    ) {
-        var newEnemyPossition: Int
-        val enemyStep: Int =
-            steps(step, NUMBER_OF_COLUMS, enemyStartPossition, enemyEndPosition, "")
+    fun universalEnemyMoves(pieceList: ArrayList<Piece>, enemyFigure: Piece) {
+            val newEnemyPossition: Int
 
-        for (index in 0..mutableCurEnemysPossition.size - 1) {
-            newEnemyPossition = mutableCurEnemysPossition.get(index)
+            val step = enemyFigure.step
+            val enemyCurrentPossition = enemyFigure.curPossition!!
 
-            newPiece = pieceList.get(newEnemyPossition)
-            oldPosition = newEnemyPossition
-            newEnemyPossition = newEnemyPossition + enemyStep
+            val enemyEndPosition = enemyFigure.endPossition
+            var stepIndex: Int = enemyFigure.stepIndex!!
+            if (stepIndex == 5) {
+                enemyFigure.stepIndex = 0
+                stepIndex = 0
+            } else {
+                enemyFigure.stepIndex = enemyFigure.stepIndex!! + 1
+                stepIndex = enemyFigure.stepIndex!!
+            }
+
+            val enemyStep: Int = steps(
+                step!!,
+                NUMBER_OF_COLUMS,
+                enemyFigure.startPossition,
+                enemyEndPosition,
+                "Right",
+                stepIndex
+            )
+
+            newPiece = pieceList.get(enemyCurrentPossition)
+            oldPosition = enemyCurrentPossition
+            newEnemyPossition = enemyCurrentPossition + enemyStep
             oldPiece = pieceList.get(newEnemyPossition)
             pieceList.set(newEnemyPossition, newPiece)
             pieceList.set(oldPosition!!, oldPiece)
-            mutableCurEnemysPossition.set(index, newEnemyPossition)
+            enemyFigure.curPossition = newEnemyPossition
 
             checkStep = false
             adapter = PieceAdapter(this, pieceList, this)
             board_grid.adapter = adapter
             oldPiece = Piece()
             newPiece = Piece()
-
-        }
 
     }
 
@@ -236,10 +274,9 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
                 cell = "Figure"
                 newPiece = pieceList.get(position)
                 oldPosition = position
-
-                pMoves = Figure().possibleMoves(position + 1, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+                pMoves = Figure().possibleMoves(position, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
                 for (index in 0..pMoves.size - 1) {
-                    val tv = board_grid.getChildAt(pMoves.get(index) - 1) as View
+                    val tv = board_grid.getChildAt(pMoves.get(index)) as View
                     tv.background = getDrawable(R.drawable.border_green)
                 }
                 checkFigureDoubleClick = true
@@ -249,7 +286,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         if (checkStep == false) {
             if (pieceList.get(position) is Grass) {
                 if (oldPosition!! >= 0) {
-                    if (pMoves.contains(position + 1)) {
+                    if (pMoves.contains(position)) {
                         cell = "Grass"
                         oldPiece = pieceList.get(position)
                         pieceList.set(position, newPiece)
@@ -272,16 +309,16 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         if (pieceList.get(position) is EnemyFigure) {
             if (!pieceList.get(position).checkDoubleClick!!) {
                 cell = "Enemy"
-                pMoves = Figure().possibleMoves(position + 1, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+                pMoves = Figure().possibleMoves(position, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
                 for (index in 0..pMoves.size - 1) {
-                    val tv = board_grid.getChildAt(pMoves.get(index) - 1) as View
+                    val tv = board_grid.getChildAt(pMoves.get(index)) as View
                     tv.background = getDrawable(R.drawable.border_red)
                 }
                 pieceList.get(position).checkDoubleClick = true
             } else {
-                pMoves = Figure().possibleMoves(position + 1, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
+                pMoves = Figure().possibleMoves(position, 1, NUMBER_OF_COLUMS, NUMBER_OF_ROWS)
                 for (index in 0..pMoves.size - 1) {
-                    val tv = board_grid.getChildAt(pMoves.get(index) - 1) as View
+                    val tv = board_grid.getChildAt(pMoves.get(index)) as View
                     tv.background = getDrawable(R.drawable.default_background)
                 }
                 val tv = board_grid.getChildAt(position) as View
