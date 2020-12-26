@@ -1,8 +1,49 @@
 package com.example.gamedemo
 
+import android.content.Context
+import android.graphics.Point
+import android.os.Build
+import android.view.View
+import android.view.WindowManager
+
 class Utils {
 
-    private fun createListWithSteps(step: Int, numberOfColums: Int, currentEnemyPosition: Int?, endEnemyPosition: Int?, direction: String) : MutableList<Int> {
+    fun getViewHeight(view: View): Int {
+        val wm = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val deviceWidth: Int
+
+        val size = Point()
+        display.getSize(size)
+        deviceWidth = size.y
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        view.measure(widthMeasureSpec, heightMeasureSpec)
+        return view.measuredHeight //        view.getMeasuredWidth();
+    }
+
+    fun getViewWidth(view: View): Int {
+        val wm = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val deviceWidth: Int
+
+        val size = Point()
+        display.getSize(size)
+        deviceWidth = size.x
+
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        view.measure(widthMeasureSpec, heightMeasureSpec)
+        return view.measuredWidth
+    }
+
+    private fun createListWithSteps(
+        step: Int,
+        numberOfColums: Int,
+        currentEnemyPosition: Int?,
+        endEnemyPosition: Int?,
+        direction: String
+    ): MutableList<Int> {
         val enemyMoves: MutableList<Int> = mutableListOf()
         val checkEnemyPossition: Int
 
@@ -31,8 +72,8 @@ class Utils {
                 }
             }
             else -> {
-                if (diffPositions != 0 && diffPositions < checkEnemyPossition -1){
-                    when(direction) {
+                if (diffPositions != 0 && diffPositions < checkEnemyPossition - 1) {
+                    when (direction) {
                         "Right" -> {
                             for (i in 0..diffPositions - 1) {
                                 enemyMoves.add(step)

@@ -3,13 +3,14 @@
     android:id="@+id/board_cell"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="15dp"
     android:elevation="4dp"
     android:gravity="center"
     android:background="@color/transparent">
 
     <FrameLayout
         android:id="@+id/frame"
-        android:background="@drawable/isometric_pixel_flat_0053"
+        android:background="@drawable/isometric_pixel_flat"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

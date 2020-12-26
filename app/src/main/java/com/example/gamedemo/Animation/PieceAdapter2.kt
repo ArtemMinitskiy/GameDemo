@@ -1,9 +1,10 @@
-package com.example.gamedemo
+package com.example.gamedemo.Animation
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.example.gamedemo.AdapterCallback
+import com.example.gamedemo.Piece
+import com.example.gamedemo.R
+import com.example.gamedemo.Utils
+import kotlinx.android.synthetic.main.activity_animation.*
 import kotlinx.android.synthetic.main.board_cell.view.board_cell
 import kotlinx.android.synthetic.main.board_cell.view.figureImage
 import kotlinx.android.synthetic.main.board_cell.view.name
@@ -47,15 +53,7 @@ class PieceAdapter2(
         val piece = this.piecesList[position]
         val inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val pieceView = inflator.inflate(R.layout.board_cell_2, null)
-//        if (piece.name == null){pieceView.board_cell.visibility = View.GONE }
-//        if (piece.imageFigure == null) {
-//            pieceView.frame.setBackgroundColor(Color.parseColor("#3700B3"))
-//            pieceView.frame.background = (ContextCompat.getDrawable(context!!, R.drawable.border_green));
-//
-//        }
-//        if (piece.imageFigure != null) {
-//            pieceView.frame.setBackgroundColor(Color.parseColor("#3700B3"))
-//        }
+
         if (piece.name == "Coffee1") {
             pieceView.figureImage2.setBackgroundResource(R.drawable.knight_run_animation)
             mAnimation = pieceView.figureImage2.getBackground() as AnimationDrawable?
@@ -67,7 +65,9 @@ class PieceAdapter2(
             pieceView.figureImage2.setBackgroundResource(R.drawable.knight_run_animation)
             mAnimation = pieceView.figureImage2.getBackground() as AnimationDrawable?
             mAnimation!!.start()
-            animSlide = AnimationUtils.loadAnimation(context, R.anim.slide_from_left)
+            animSlide = AnimationUtils.loadAnimation(context,
+                R.anim.slide_from_left
+            )
             pieceView.figureImage2.startAnimation(animSlide)
         }
 
@@ -75,13 +75,20 @@ class PieceAdapter2(
 
 //            animSlide = AnimationUtils.loadAnimation(context, R.anim.slide)
 //            pieceView.frame.startAnimation(animSlide)
+            Log.i("Demo", Utils().getViewHeight(pieceView.board_cell).toString())
+            Log.i("Demo", Utils().getViewWidth(pieceView.board_cell).toString())
+            Log.i("Demo", pieceView.board_cell.height.toString())
+            Log.i("Demo", pieceView.board_cell.width.toString())
 
             environmentCell = adapterCallback.doThings(position)
             when (environmentCell) {
-                "Figure" -> pieceView.board_cell.background =
-                    ContextCompat.getDrawable(context!!, R.drawable.border_blue)
+                "Figure" -> {
+                    pieceView.board_cell.background = ContextCompat.getDrawable(context!!, R.drawable.border_blue)
+                }
                 "Enemy" -> pieceView.board_cell.background =
-                    ContextCompat.getDrawable(context!!, R.drawable.border_red)
+                    ContextCompat.getDrawable(context!!,
+                        R.drawable.border_red
+                    )
                 "Grass" -> pieceView.board_cell.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         }
