@@ -14,7 +14,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
-class MainActivity : AppCompatActivity(), AdapterCallback {
+class MainActivity2 : AppCompatActivity(), AdapterCallback {
 
     var adapter: PieceAdapter? = null
     var pieceList = ArrayList<Piece>()
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main2)
         board_grid.numColumns = NUMBER_OF_COLUMS
 
         // load cards
@@ -83,19 +83,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("Coffee4", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("Coffee5", null, null, null, null, null, null, null, null))
-        pieceList.add(
-            EnemyFigure(
-                "EnemyFigure2",
-                null,
-                null,
-                false,
-                1,
-                -1,
-                20,
-                20,
-                23
-            )
-        )
+        pieceList.add(EnemyFigure("EnemyFigure2", null, null, false, 1, -1, 20, 20, 23))
         pieceList.add(Grass("Coffee", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("Rock1", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
@@ -108,41 +96,70 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("null", null, null, null, null, null, null, null, null))
 
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+       pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+       pieceList.add(Grass("Lava", null, null, null, null, null, null, null, null))
+
         adapter = PieceAdapter(this, pieceList, this)
         board_grid.adapter = adapter
-
-        next.setOnClickListener {
-            val i = Intent(this, AnimationActivity::class.java)
-            startActivity(i)
-        }
-
-        secondLevel.setOnClickListener {
-            val i = Intent(this, MainActivity2::class.java)
-            startActivity(i)
-        }
 
         resetFab.setOnClickListener {
             if (checkStep == true) {
                 var checkName = "Figure"
 //                GlobalScope.async {
-                    for (index in 0..(NUMBER_OF_COLUMS * NUMBER_OF_ROWS) - 1) {
-                        if (pieceList.get(index) is EnemyFigure) {
-                            enemyFigure = pieceList.get(index) as EnemyFigure
+                for (index in 0..(NUMBER_OF_COLUMS * NUMBER_OF_ROWS) - 1) {
+                    if (pieceList.get(index) is EnemyFigure) {
+                        enemyFigure = pieceList.get(index) as EnemyFigure
 
-                            if (!enemyFigure.name.equals(checkName)) {
-                                isFigureDead = isDead(pieceList, index)
-                                isFigureDeadIndex = index
-                                if (!isDead(pieceList, index)) {
-//                                    this@MainActivity.runOnUiThread {
-                                        universalEnemyMoves(pieceList, enemyFigure)
-//                                    }
+                        if (!enemyFigure.name.equals(checkName)) {
+                            isFigureDead = isDead(pieceList, index)
+                            isFigureDeadIndex = index
+                            if (!isDead(pieceList, index)) {
+                                this@MainActivity2.runOnUiThread {
+                                    universalEnemyMoves(pieceList, enemyFigure)
+                                }
 //                                    delay(500L)
 
-                                }
-                                checkName = enemyFigure.name.toString()
                             }
-
+                            checkName = enemyFigure.name.toString()
                         }
+
+                    }
 
 //                    }
                 }
@@ -173,7 +190,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
         attackRadius.sort()
         for (index in 0..attackRadius.size - 1) {
             if (pieceList.get(attackRadius.get(index)) is Figure) {
-                Toast.makeText(this, "You are DEAD!, isDead", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "You are DEAD!", Toast.LENGTH_LONG).show()
                 checkStep = false
                 return true
             }
@@ -207,7 +224,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
                         null
                     )
                 )
-                Toast.makeText(this, "You are DEAD!, deathAttackMove", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "You are DEAD!", Toast.LENGTH_LONG).show()
                 checkStep = false
             }
         }
@@ -446,7 +463,7 @@ class MainActivity : AppCompatActivity(), AdapterCallback {
     }
 
     companion object {
-        const val NUMBER_OF_COLUMS = 4
+        const val NUMBER_OF_COLUMS = 8
         const val NUMBER_OF_ROWS = 8
 
         fun myLog(str: String, message: Any) = Log.i("DemoLog", (str + ": " + message))

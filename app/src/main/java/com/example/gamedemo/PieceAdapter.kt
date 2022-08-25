@@ -11,12 +11,6 @@ import android.view.animation.Animation
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.board_cell.view.*
-import kotlinx.android.synthetic.main.board_cell.view.board_cell
-import kotlinx.android.synthetic.main.board_cell.view.figureImage
-import kotlinx.android.synthetic.main.board_cell.view.figureImage2
-import kotlinx.android.synthetic.main.board_cell.view.frame
-import kotlinx.android.synthetic.main.board_cell.view.name
-import kotlinx.android.synthetic.main.board_cell_2.view.*
 
 class PieceAdapter(
     context: Context,
@@ -74,6 +68,9 @@ class PieceAdapter(
             pieceView.figureImage2.setBackgroundResource(R.drawable.chest_animation)
             mAnimation = pieceView.figureImage2.getBackground() as AnimationDrawable?
             mAnimation!!.start()
+        }
+        if (piece.name == "Lava") {
+            pieceView.board_cell.background = ContextCompat.getDrawable(context!!, R.drawable.isometric_pixel_flat_lava)
         }
 
         pieceView.board_cell.setOnClickListener {

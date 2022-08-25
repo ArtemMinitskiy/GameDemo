@@ -22,15 +22,12 @@ import kotlinx.android.synthetic.main.board_cell.view.figureImage
 import kotlinx.android.synthetic.main.board_cell.view.name
 import kotlinx.android.synthetic.main.board_cell_2.view.*
 
-class PieceAdapter2(
-    context: Context,
-    pieceList: ArrayList<Piece>,
-    private var adapterCallback: AdapterCallback
-) : BaseAdapter() {
+class PieceAdapter2(context: Context, pieceList: ArrayList<Piece>, private var adapterCallback: AdapterCallback) : BaseAdapter() {
 
     var piecesList = pieceList
     var context: Context? = context
     var environmentCell = ""
+    var cellSizes: ArrayList<Float> = arrayListOf()
 
     //Anim
     var mAnimation: AnimationDrawable? = null
@@ -65,20 +62,19 @@ class PieceAdapter2(
             pieceView.figureImage2.setBackgroundResource(R.drawable.knight_run_animation)
             mAnimation = pieceView.figureImage2.getBackground() as AnimationDrawable?
             mAnimation!!.start()
-            animSlide = AnimationUtils.loadAnimation(context,
-                R.anim.slide_from_left
-            )
+            animSlide = AnimationUtils.loadAnimation(context, R.anim.slide_from_left)
             pieceView.figureImage2.startAnimation(animSlide)
         }
 
         pieceView.board_cell.setOnClickListener {
 
-//            animSlide = AnimationUtils.loadAnimation(context, R.anim.slide)
-//            pieceView.frame.startAnimation(animSlide)
-            Log.i("Demo", Utils().getViewHeight(pieceView.board_cell).toString())
-            Log.i("Demo", Utils().getViewWidth(pieceView.board_cell).toString())
-            Log.i("Demo", pieceView.board_cell.height.toString())
-            Log.i("Demo", pieceView.board_cell.width.toString())
+            cellSizes.add(pieceView.board_cell.height.toFloat())
+            cellSizes.add(pieceView.board_cell.width.toFloat())
+
+            adapterCallback.getCellScale(cellSizes, position)
+
+//            Log.i("Demo", pieceView.board_cell.height.toString())
+//            Log.i("Demo", pieceView.board_cell.width.toString())
 
             environmentCell = adapterCallback.doThings(position)
             when (environmentCell) {

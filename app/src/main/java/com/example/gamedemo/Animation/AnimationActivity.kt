@@ -1,30 +1,26 @@
 package com.example.gamedemo.Animation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Point
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.example.gamedemo.*
+import com.example.gamedemo.AdapterCallback
+import com.example.gamedemo.Grass
+import com.example.gamedemo.Piece
+import com.example.gamedemo.R
 import kotlinx.android.synthetic.main.activity_animation.*
 
-class AnimationActivity : AppCompatActivity(),
-    AdapterCallback {
-    //class AnimationActivity : AppCompatActivity() {
+
+class AnimationActivity : AppCompatActivity(), AdapterCallback {
+
     var mAnimation: AnimationDrawable? = null
     lateinit var animSlide: Animation
 
@@ -32,6 +28,12 @@ class AnimationActivity : AppCompatActivity(),
     var pieceList = ArrayList<Piece>()
 
     var scaleType: Float = 1.0F
+
+    val axisX = 217F
+    val axisY = 180F
+
+    var cellXSize = 0F
+    var cellYSize = 0F
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,24 +44,9 @@ class AnimationActivity : AppCompatActivity(),
 //        imageView.layoutParams.height = Utils().getViewHeight(board_grid)
 //        imageView.layoutParams.width = Utils().getViewWidth(board_grid) / 3 - 16
 
-        imageView.layoutParams.height = 100
-        imageView.layoutParams.width = 220
-        imageView.requestLayout()
 
         // load cards
-        pieceList.add(
-            Grass(
-                "Coffee",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            )
-        )
+        pieceList.add(Grass("Coffee", null, null, null, null, null, null, null, null))
         pieceList.add(
             Grass(
                 "Coffee",
@@ -140,29 +127,78 @@ class AnimationActivity : AppCompatActivity(),
         )
         pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
         pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
 
+        /*pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
 
-//        var display = windowManager.defaultDisplay!!
-//
-//        val size = Point()
-//        display.getSize(size)
-//        val width: Int = size.x
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
 
-//        imageView.background = ContextCompat.getDrawable(this, R.drawable.hero_knight_run_1)
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee2", null, null, null, null, null, null, null, null))
+        pieceList.add(Grass("Coffee1", null, null, null, null, null, null, null, null))*/
+
 
         adapter = PieceAdapter2(this, pieceList, this)
         board_grid.adapter = adapter
-
-        myLog("board_grid height ", Utils().getViewHeight(board_grid))
-        myLog("board_grid weight ", Utils().getViewWidth(board_grid))
-        myLog("board_grid height ", board_grid.height)
-        myLog("board_grid weight ", board_grid.width)
-
 //        imageView.setBackgroundResource(R.drawable.knight_run_animation)
 //        mAnimation = imageView.getBackground() as AnimationDrawable?
-
-//        val display = windowManager.defaultDisplay
-//        animation = Animation(backgroundImage, fabLayout, tab_layout, display)
 
         btnStart.setOnClickListener {
             val param = imageView.layoutParams as ViewGroup.MarginLayoutParams
@@ -177,47 +213,39 @@ class AnimationActivity : AppCompatActivity(),
         }
 
         btnInversion.setOnClickListener {
-            val param = imageView.layoutParams as ViewGroup.MarginLayoutParams
-            for (index in 0..Utils().getViewWidth(board_grid) / 3 + 8) {
-//                Handler(Looper.getMainLooper()).postDelayed({
-                param.setMargins(32 + 220 * 2, 360 + 32, 0, 0)
-//                param.setMargins(16 + index, (Utils().getViewHeight(board_grid) / 2 + 16) * 2, 0, 0)
-                imageView.layoutParams = param
-//                }, 0)
-            }
+            val moveAnimation = TranslateAnimation(0F, axisX, 0F, axisY)
+            moveAnimation.duration = 2000
+            moveAnimation.fillAfter = true
+            moveAnimation.setAnimationListener(animationMoveListener)
+            imageView.startAnimation(moveAnimation)
+
+
+
 
             //0
 //            param.setMargins(32, 32, 0, 0) // Where 32 margin
-            //1
-//            param.setMargins(32 + 220, 32, 0, 0)
-            //2
-//            param.setMargins(32 + 220 * 2, 32, 0, 0)
-            //3
-//            param.setMargins(32, 210, 0, 0)
-            //4
-//            param.setMargins(32 + 220, 210, 0, 0)
-            //5
-//            param.setMargins(32 + 220 * 2, 210, 0, 0)
-            //6
-//            param.setMargins(32, 180 * 2 + 32, 0, 0)
-            //7
-//            param.setMargins(32 + 220, 180 * 2 + 32, 0, 0)
-            //8
-//            param.setMargins(32 + 220 * 2, 180 * 2 + 32, 0, 0)
-
-
-
-
-
 
 //            animSlide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide)
 //            imageView.startAnimation(animSlide)
 
-
         }
 
-//        createAnimation()
+        createAnimation()
     }
+
+    var animationMoveListener: AnimationListener =
+        object : AnimationListener {
+            override fun onAnimationEnd(arg0: Animation) {
+                myLog("onAnimationEnd", "")
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+                myLog("onAnimationRepeat", "")
+            }
+            override fun onAnimationStart(animation: Animation) {
+                myLog("onAnimationStart", "")
+            }
+        }
 
     fun createAnimation() {
 
@@ -311,11 +339,61 @@ class AnimationActivity : AppCompatActivity(),
     }
 
     override fun doThings(position: Int): String {
+//        getImageViewPositionOnLine(position)
         return ""
     }
 
+    override fun getCellScale(listOfCellSize: ArrayList<Float>, position: Int) {
+        cellXSize = listOfCellSize.get(0)
+        cellYSize = listOfCellSize.get(1)
+        myLog("", cellXSize)
+        myLog("", cellYSize)
+
+        imageView.layoutParams.height = (cellXSize / 2).toInt()
+        imageView.layoutParams.width = cellYSize.toInt()
+        imageView.requestLayout()
+
+        setImageViewStartPosition(cellXSize, cellYSize, position)
+    }
+
+    fun setImageViewStartPosition(shiftX: Float, shiftY: Float, position: Int) {
+        val axisX = 3
+        val currentAxisY = position / axisX + 1
+        val startLine = axisX * currentAxisY - axisX
+        val endLine = axisX * currentAxisY - 1
+        val marginX = position - startLine
+        val marginY = currentAxisY - 1
+
+//        var moveAnimation = TranslateAnimation(0F, 0F, 0F, 0F)
+
+        var moveAnimation = TranslateAnimation(0F, (shiftX + 32) * marginX, 0F, (shiftY - 32) * marginY)
+
+        moveAnimation.duration = 2000
+        moveAnimation.fillAfter = true
+        moveAnimation.setAnimationListener(animationMoveListener)
+        imageView.startAnimation(moveAnimation)
+
+    }
+
     fun myLog(str: String, message: Any) {
-        Log.i("DemoLog", (str + message))
+        Log.i("DemoLog", (str + ": " + message))
+    }
+
+    fun getImageViewPositionOnLine(position: Int) {
+        val axisX = 3
+        myLog("position", position)
+        val currentAxisY = position / axisX + 1
+        myLog("currentAxisY", currentAxisY)
+        val startLine = axisX * currentAxisY - axisX
+        myLog("startLine", startLine)
+        val endLine = axisX * currentAxisY - 1
+        myLog("endLine", endLine)
+        val marginX = position - startLine
+        myLog("marginX", marginX)
+        val marginY = currentAxisY - 1
+        if (marginY > 0) {
+            myLog("marginY", marginY)
+        }
     }
 
 }
